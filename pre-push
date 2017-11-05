@@ -1,0 +1,20 @@
+#!/bin/sh
+
+nose2 -s tests
+code=$?
+
+if [ "$code" == "0" ]; then
+  exit 0
+fi
+
+
+cat <<\EOF
+
+*------------------------ERROR----------------------------*
+
+Error: Test execution failed, make sure to update any test
+
+affected by your changes.
+
+EOF
+exit $code

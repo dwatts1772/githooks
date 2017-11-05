@@ -1,11 +1,8 @@
-#!/usr/bin/env ruby
+#! /bin/sh
+# If commit message is a fixup message, ignore it
+# [[ -n "$(cat $1 | grep 'fixup!')" ]] && FIXUP="YES"
 
-message_file = ARGV[0]
-message = File.read(message_file)
-
-$regex = /\[ref: (\d+)\]/
-
-if !$regex.match(message)
-  puts "[POLICY] Your message is not formatted correctly"
-  exit 1
-end
+TICKET=$(git symbolic-ref HEAD | rev | cut -d/ -f1 | rev | grep -o -E "[A-Z]+-[0-9]+")
+if [[ -n "${TICKET}" && -z "${FIXUP}" ]]; then
+    sed -i.bak -e "1s/^/[${TICKET}] /" $1
+fi
